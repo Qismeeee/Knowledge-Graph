@@ -1,4 +1,3 @@
-"""Base domain models"""
 from datetime import datetime
 from typing import Literal, Optional
 from pydantic import BaseModel, Field
@@ -18,11 +17,13 @@ class RepoConfig(BaseModel):
 
 
 class IndexRun(BaseModel):
-    """Index run metadata"""
     id: str
     repo_id: str
     commit_sha: str
+    mode: Literal["full", "incremental"] = "full"
+    status: Literal["running", "success", "failed"] = "running"
     started_at: datetime
     completed_at: Optional[datetime] = None
-    status: Literal["running", "success", "failed"] = "running"
+    files_processed: int = 0
+    files_skipped: int = 0
     error_message: Optional[str] = None

@@ -1,8 +1,7 @@
 import logging
 import sys
-from typing import Optional
 
-from config.settings import settings
+from app.config.settings import settings
 
 
 def get_logger(name: str) -> logging.Logger:

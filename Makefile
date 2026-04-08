@@ -5,7 +5,7 @@ help:
 	@echo "  make install       - Install dependencies"
 	@echo "  make dev-install   - Install dev dependencies"
 	@echo "  make lint          - Run linting (ruff + mypy)"
-	@echo "  make format        - Format code with black"
+	@echo "  make format        - Format code with ruff"
 	@echo "  make test          - Run tests"
 	@echo "  make docker-build  - Build Docker image"
 	@echo "  make docker-up     - Start containers"
@@ -13,29 +13,34 @@ help:
 	@echo "  make clean         - Clean build artifacts"
 
 install:
-	pip install -r requirements.txt
+	pip install -e .
 
 dev-install:
 	pip install -e ".[dev]"
 
 lint:
-	ruff check app tests
+	ruff check app
 	mypy app
 
 format:
-	black app tests
+	ruff format app
+	ruff check --fix app
 
 test:
 	pytest -v
 
 docker-build:
-	docker-compose build
+	docker compose build
 
 docker-up:
-	docker-compose up -d
+	docker compose up -d
 
 docker-down:
-	docker-compose down
+	docker compose down
+
+lock:
+	pip install pip-tools
+	pip-compile pyproject.toml -o requirements.txt --strip-extras
 
 clean:
 	rm -rf build dist .egg-info __pycache__ .pytest_cache .coverage htmlcov
